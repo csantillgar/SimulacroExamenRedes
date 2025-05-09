@@ -1,203 +1,285 @@
 # SimulacroExamenRedes
 https://github.com/csantillgar/SimulacroExamenRedes.git
-# Proyecto de Redes y Comunicaciones
-
-Este proyecto abarca preguntas clave sobre las capas de Red, Transporte, Aplicación y Seguridad en Redes. A continuación se detallan las preguntas a resolver.
-
 ## Parte I: Capa de Red
 
 ### Pregunta 1: Cálculo de Ruta Más Corta
+**a)** Describe brevemente cómo funciona el Algoritmo de Dijkstra para hallar la ruta más corta en un grafo con pesos.  
+1. **Comienzo**: Se asigna una distancia infinita a todos los nodos, excepto al nodo inicial, que se establece en cero.  
+2. **Escoger nodo**: Se selecciona el nodo con menor distancia entre los que aún no han sido visitados.  
+3. **Actualización**: Se evalúa cada vecino del nodo elegido; si pasar por ese nodo reduce la distancia, se actualiza la distancia registrada.  
+4. **Nodo visitado**: El nodo elegido se marca como visitado y no será procesado de nuevo.  
+5. **Iterar**: Se repiten los pasos 2-4 hasta procesar todos los nodos o encontrar el destino.
 
-## Parte I: Capa de Red
+> **Complejidad**: O((V+E)·log V) al usar una cola de prioridad binaria (V = nodos, E = aristas).
 
-### Pregunta 1: Cálculo de Ruta Más Corta
+**b)** Explica cómo funciona el Enrutamiento por Inundación (Flooding) y analiza sus pros y contras frente a Dijkstra.  
+- **Funcionamiento**: Cada vez que un nodo recibe un paquete, lo reenvía a **todos sus vecinos**, excepto al que lo envió. Se implementan mecanismos como TTL o almacenamiento de paquetes recibidos para evitar ciclos infinitos.  
+- **Ventajas**:  
+  - No necesita tablas de enrutamiento ni conocimiento completo de la red.  
+  - Garantiza la entrega si existe al menos un camino válido.  
+- **Desventajas**:  
+  - **Sobrecarga excesiva**: genera múltiples copias redundantes.  
+  - **Uso ineficiente**: desperdicia ancho de banda.  
+  - **No óptimo**: no asegura la mejor ruta ni el menor coste.
 
-#### a) Explica brevemente el funcionamiento del Algoritmo de Dijkstra para encontrar la ruta más corta entre dos nodos en un grafo ponderado.
-
-El **Algoritmo de Dijkstra** es un método utilizado para encontrar la ruta más corta desde un nodo origen hacia todos los demás nodos de un grafo ponderado (es decir, donde las aristas tienen un peso o coste asociado). Su funcionamiento básico es el siguiente:
-
-1. **Inicialización**:  
-   - Se asigna una distancia de 0 al nodo origen y distancia infinita a todos los demás nodos.
-   - Se marca el nodo origen como **visitado** y los demás como **no visitados**.
-
-2. **Exploración de vecinos**:  
-   - Para el nodo actual, se evalúan todos sus vecinos no visitados.
-   - Se calcula la **distancia acumulada** desde el origen hasta cada vecino pasando por el nodo actual.
-   - Si la distancia calculada es menor que la distancia registrada previamente para ese vecino, se actualiza.
-
-3. **Selección del siguiente nodo**:  
-   - Se elige el nodo no visitado con la **menor distancia acumulada** y se repite el proceso desde ese nodo.
-
-4. **Finalización**:  
-   - El algoritmo termina cuando todos los nodos han sido visitados o cuando se alcanza el nodo de destino (en caso de que solo interese una ruta específica).
-
-Al final, se obtiene el camino más corto y su coste desde el nodo origen hasta cada nodo alcanzable en el grafo.
-
-**Características principales:**
-- Funciona solo con **pesos no negativos**.
-- Garantiza la ruta más corta.
-- Tiene una complejidad de `O(V^2)` o `O(E + V log V)` si se usa una cola de prioridad (heap).
-
-
-**b)** Describe el método de Enrutamiento por Inundación (Flooding) y discute sus ventajas y desventajas comparándolo con Dijkstra.
+---
 
 ### Pregunta 2: Cálculo de Direcciones de Broadcast y Subredes
+**a)** Para la red `172.29.152.0` con máscara `255.255.248.0`, encuentra la dirección de broadcast y explica el procedimiento.  
+1. **Convertir la máscara**:  
+   255.255.248.0 → 11111111.11111111.11111000.00000000  
+2. **Identificar bits de host**: 32 – 21 = 11 bits.  
+3. **Broadcast**: activar todos los bits de host a 1:  
+   - 172.29. (152 → 10011000) | host bits = 11111111.111  
+   - Resultado: 172.29.159.255
 
-**a)** Para la subred 172.29.152.0 con máscara 255.255.248.0, determina la dirección de broadcast. Explica el proceso de conversión de la máscara a binario y cómo se obtiene el resultado.
+**b)** Para la red `172.18.26.0/23`, calcula su dirección de broadcast y explica el método.  
+1. **Máscara**: 255.255.254.0 → 11111111.11111111.11111110.00000000  
+2. **Tercer octeto múltiplos de 2**: valor inicial 26 → el múltiplo menor o igual = 26.  
+3. **Red base**: 172.18.26.0  
+4. **Broadcast**: suma 1 al rango del bloque → 172.18.27.255  
+5. **Rango de hosts**:  
+   - Primera IP: 172.18.26.1  
+   - Última IP: 172.18.27.254
 
-**b)** Dado el bloque 172.18.26.0/23, calcula la dirección de broadcast y justifica el proceso.
+---
 
 ### Pregunta 3: Última Dirección Válida y Rango de Hosts
+**a)** Con la subred `172.30.67.192` y máscara `255.255.255.192`, indica la última dirección válida.  
+- Total direcciones: 2^(32–26) = 64.  
+- Rango: 172.30.67.192 – 172.30.67.255  
+- **Broadcast**: 172.30.67.255  
+- **Última IP válida**: 172.30.67.254
 
-**a)** Con la subred 172.30.67.192 y máscara 255.255.255.192, determina cuál es la última dirección de host válida (excluyendo la dirección de broadcast).
+**b)** Para la IP `172.22.53.199` con máscara `255.255.252.0`, encuentra el rango de direcciones válidas.  
+1. **Máscara**: 255.255.252.0 → 11111111.11111111.11111100.00000000  
+2. **Bloque de 4 en tercer octeto**: 53 → bloque base = 52.  
+3. **Red**: 172.22.52.0  
+4. **Broadcast**: 172.22.55.255  
+5. **Rango de hosts**:  
+   - Inicio: 172.22.52.1  
+   - Final: 172.22.55.254
 
-**b)** Para el host 172.22.53.199 con máscara 255.255.252.0, determina el rango de direcciones válidas (primera y última dirección de host) de la subred.
+---
 
 ### Pregunta 4: Capacidad y Segmentación de Subredes
+**a)** Calcula cuántos dispositivos pueden conectarse en la red `172.26.0.0` con máscara `255.255.255.192`.  
+- Hosts = 2^(32–26) – 2 = 64 – 2 = **62 dispositivos**.
 
-**a)** Calcula el número de equipos (hosts) que pueden conectarse en la red 172.26.0.0 con máscara 255.255.255.192.
+**b)** Para la IP `172.18.171.190/23`, determina la subred a la que pertenece.  
+1. /23 implica bloques de 2 en el tercer octeto.  
+2. 171 → múltiplo de 2 menor o igual = 170.  
+3. **Subred**: 172.18.170.0/23
 
-**b)** Dado el host 172.18.171.190/23, identifica a qué subred pertenece, explicando cómo se determina el bloque correspondiente.
+---
 
 ### Pregunta 5: Número de Subredes Necesarias
+Explica cómo se calcula el número de subredes posibles usando:  
+Nº de subredes = 2^s  
+donde _s_ = número de bits que se toman prestados para subred. Si se requieren al menos 4 subredes:  
+- 2^s ≥ 4 → s ≥ 2.  
+- **Ejemplo**: comenzando desde /24, con s=2 → máscara /26 → se obtienen 4 subredes de 64 direcciones cada una.
 
-Explica cómo se determina el número de subredes disponibles utilizando la fórmula:
-
-`Nº de subredes = 2^s`
-
-donde `s` es el número de bits prestados al identificador de subred. Aplica este concepto a un escenario en el que se requieren al menos 4 subredes para segmentar una red.
+---
 
 ## Parte II: Capa de Transporte
 
 ### Pregunta 6: Comparación entre TCP y UDP
+**a)** Compara TCP y UDP en:  
+- Requerimiento de conexión  
+- Fiabilidad  
+- Control de flujo/congestión  
+- Velocidad
 
-**a)** Compara TCP y UDP en términos de:
+| Propiedad                | TCP                                 | UDP                    |
+|-------------------------|------------------------------------|-----------------------|
+| **Conexión**             | Necesita establecer conexión       | Sin conexión          |
+| **Fiabilidad**           | Garantiza entrega con ACKs         | No asegura entrega     |
+| **Control de flujo**     | Incluye control de flujo y congestión | No posee control      |
+| **Velocidad**            | Más lento por overhead             | Más rápido por simplicidad |
 
-- Necesidad de establecer conexión
-- Fiabilidad y control de errores
-- Control de flujo y congestión
-- Velocidad de transmisión
+**b)** Nombra dos aplicaciones donde prefieras UDP y explica por qué.  
+1. **VoIP**: prioriza baja latencia sobre retransmisión.  
+2. **Streaming en directo**: mantiene fluidez pese a posibles pérdidas.
 
-**b)** Menciona dos ejemplos de aplicaciones en las que se prefiera usar UDP y justifica la elección.
+---
 
 ### Pregunta 7: Establecimiento y Terminación de Conexión en TCP
+Describe cómo TCP establece y finaliza una conexión.  
 
-Describe en detalle el proceso de establecimiento de conexión en TCP (Three-Way Handshake) y el proceso de terminación de la conexión (Four-Way Handshake). Explica la importancia de cada uno de los pasos involucrados.
+1. **Establecimiento (Three-Way Handshake)**  
+   1. Cliente → Servidor: **SYN** con seq=x  
+   2. Servidor → Cliente: **SYN-ACK** con seq=y, ack=x+1  
+   3. Cliente → Servidor: **ACK** con ack=y+1  
+   > Confirma sincronización de secuencias y disponibilidad de la conexión.
+
+2. **Finalización (Four-Way Handshake)**  
+   1. Emisor → Receptor: **FIN** con seq=u  
+   2. Receptor → Emisor: **ACK** con ack=u+1  
+   3. Receptor → Emisor: **FIN** con seq=v  
+   4. Emisor → Receptor: **ACK** con ack=v+1  
+   > Garantiza cierre ordenado y recepción final de datos.
+
+---
 
 ### Pregunta 8: Multiplexación y Demultiplexación
+Explica qué es la multiplexación descendente y ascendente en transporte, con ejemplos.
 
-Explica el concepto de multiplexación descendente y multiplexación ascendente en la capa de transporte, y proporciona un ejemplo práctico para cada caso.
+- **Multiplexación (descendente)**: múltiples procesos de una máquina envían datos usando distintos **puertos fuente** en TCP/UDP.  
+  - **Ejemplo**: navegador abre varias conexiones simultáneas usando puertos 49152, 49153…
 
-### Pregunta 9: Cálculo del Tamaño de Ventana en TCP
+- **Demultiplexación (ascendente)**: el receptor identifica a qué aplicación entregar los datos según **IP y puerto destino**.  
+  - **Ejemplo**: servidor HTTP recibe todas las peticiones en puerto 80 y las asigna al servidor web.
 
-Se tiene un enlace con los siguientes parámetros:
+---
 
-- RTT = 50 ms
-- Ancho de banda = 100 Mbps
-- MSS (Tamaño máximo de segmento) = 1,500 bytes
+## Parte III: Capa de Enlace
 
-Realiza lo siguiente:
+### Pregunta 9: Direccionamiento MAC y su Papel
+**a)** ¿Qué es una dirección MAC y qué papel cumple en la comunicación de capa de enlace?  
+- Es un **identificador físico único** de 48 bits asignado a cada tarjeta de red, expresado en hexadecimal (ej: `00:1A:2B:3C:4D:5E`).  
+- Su función es servir de dirección de destino y origen en tramas Ethernet dentro de una red local, garantizando que los datos lleguen al dispositivo correcto.
 
-1. Convierte las unidades necesarias (por ejemplo, RTT a segundos y ancho de banda a bps).
-2. Calcula el tamaño óptimo de la ventana en bits y en bytes usando la fórmula:
+**b)** ¿Puede cambiar una dirección MAC?  
+- Normalmente es fija en hardware, pero algunos sistemas operativos o herramientas permiten **"spoofing"** para cambiarla temporalmente a nivel de software.
 
-`Ventana óptima = Ancho de banda × RTT`
+---
 
-3. Determina aproximadamente el número de segmentos MSS que pueden estar en tránsito simultáneamente.
+### Pregunta 10: Protocolos de Acceso al Medio
+**a)** Explica la diferencia entre CSMA/CD y CSMA/CA.  
+| Característica | CSMA/CD (Collision Detection)   | CSMA/CA (Collision Avoidance) |
+|----------------|-------------------------------|-------------------------------|
+| Uso principal   | Ethernet cableado             | Redes inalámbricas (WiFi)     |
+| Mecanismo       | Detecta colisiones tras transmitir | Intenta evitar colisiones antes de transmitir |
+| Actuación       | Retransmite si hay colisión   | Espera turnos antes de enviar |
 
-Muestra todos los pasos de tu cálculo.
+**b)** ¿Por qué CSMA/CD no se usa en redes inalámbricas?  
+Porque en WiFi es difícil detectar colisiones debido a **interferencias y cobertura limitada**; en su lugar, CSMA/CA intenta **evitarlas antes de transmitir** mediante avisos y tiempos de espera.
 
-### Pregunta 10: Control de Congestión en TCP
+---
 
-Explica brevemente cómo TCP implementa mecanismos de control de congestión, haciendo énfasis en:
+### Pregunta 11: Switch vs Hub
+**a)** Diferencia principal entre un switch y un hub en capa de enlace:  
+- **Hub**: Reenvía todas las tramas a **todos los puertos**; es un dispositivo **no inteligente**.  
+- **Switch**: Aprende direcciones MAC y envía tramas solo al **puerto correspondiente**; reduce colisiones y mejora eficiencia.
 
-- El Algoritmo de Arranque Lento (Slow Start)
-- El Algoritmo de Nagle
-- El Algoritmo de Clark
+**b)** ¿Por qué un switch mejora el rendimiento frente a un hub?  
+Porque **segmenta dominios de colisión**, evitando que todas las estaciones compitan por el mismo medio, permitiendo **transmisiones simultáneas** entre pares diferentes.
 
-Para cada uno, menciona cuál es su objetivo y cómo contribuye a optimizar el rendimiento de la red.
+---
 
-## Parte III: Capa de Aplicación y Aplicaciones Multimedia
+## Parte IV: Capa de Aplicación
 
-### Pregunta 11: Funcionamiento de DNS
+### Pregunta 12: Protocolos de Aplicación
+**a)** Describe las funciones principales de:  
+- **HTTP**: protocolo para la transferencia de **páginas web** y recursos asociados.  
+- **DNS**: sistema que traduce nombres de dominio a **direcciones IP**.  
+- **SMTP**: protocolo para el **envío de correos electrónicos** entre servidores.
 
-Describe el proceso completo de resolución de nombres en el Sistema de Nombres de Dominio (DNS), desde que el usuario ingresa un dominio en el navegador hasta que se obtiene la dirección IP del servidor.
+**b)** Menciona un protocolo que use UDP y otro que use TCP, y justifica.  
+- **UDP**: DNS → porque prioriza **rapidez** sobre fiabilidad en consultas.  
+- **TCP**: HTTP → necesita transmisión **fiable y ordenada** de datos.
 
-### Pregunta 12: Protocolos de Correo Electrónico
+---
 
-Compara las características de los protocolos POP3, IMAP y SMTP en términos de:
+### Pregunta 13: FTP y Puertos
+**a)** ¿Qué es FTP y qué puertos usa?  
+- Protocolo para la **transferencia de archivos** entre cliente y servidor.  
+- Puertos:  
+  - **21**: control de conexión  
+  - **20**: transferencia de datos (modo activo)
 
-- Función principal
-- Tipo de uso y acceso
-- Modo de almacenamiento de correos
+**b)** ¿Diferencia entre modo activo y pasivo en FTP?  
+- **Activo**: servidor inicia la conexión de datos hacia el cliente.  
+- **Pasivo**: cliente inicia ambas conexiones (control y datos) → preferido tras firewalls/NAT.
 
-Incluye ejemplos de situaciones en las que cada uno es más adecuado.
+---
 
-### Pregunta 13: Funcionamiento de HTTP y FTP
+### Pregunta 14: Cliente-Servidor vs P2P
+**a)** Diferencia clave entre arquitecturas cliente-servidor y peer-to-peer:  
+- **Cliente-servidor**: un servidor centralizado proporciona servicios a múltiples clientes.  
+- **P2P**: todos los nodos actúan como **cliente y servidor simultáneamente**, compartiendo recursos entre iguales.
 
-**a)** Explica el funcionamiento básico de HTTP, mencionando los métodos más utilizados (GET, POST, PUT, DELETE).
+**b)** Ejemplo de aplicación P2P y su ventaja:  
+- **BitTorrent**: permite **descargas distribuidas** al obtener partes del archivo desde múltiples fuentes, reduciendo la carga en un solo servidor.
 
-**b)** Describe el funcionamiento de FTP y señala las diferencias esenciales con HTTP, en especial en lo que se refiere al uso de conexiones (control y datos).
+---
 
-### Pregunta 14: Streaming y VoIP
+### Pregunta 15: Capas y Protocolos
+Relaciona cada protocolo con su capa correspondiente:
 
-**a)** Define y compara brevemente los siguientes tipos de streaming:
+| Protocolo | Capa OSI       |
+|------------|----------------|
+| HTTP       | Aplicación      |
+| TCP        | Transporte      |
+| IP         | Red             |
+| Ethernet   | Enlace de datos |
+| ARP        | Enlace de datos |
 
-- UDP Streaming
-- HTTP Streaming
-- Adaptive HTTP Streaming (DASH)
+### Pregunta 16: NAT y su Funcionamiento
+**a)** ¿Qué es NAT y qué problema resuelve?  
+- **NAT (Network Address Translation)** es un mecanismo que traduce direcciones IP privadas a una IP pública (y viceversa), permitiendo que múltiples dispositivos internos compartan una única dirección IP pública.  
+- Resuelve el problema de la **escasez de direcciones IPv4**.
 
-Menciona un ejemplo de aplicación para cada uno.
+**b)** ¿Qué limitaciones tiene NAT?  
+- Algunas aplicaciones (VoIP, juegos online) pueden fallar al esperar conexiones entrantes.  
+- Complica el uso de **servidores locales accesibles desde internet**.  
+- Puede **romper el principio extremo-a-extremo** de la comunicación.
 
-**b)** Explica el proceso de funcionamiento de VoIP (Voz sobre IP) y enumera algunos problemas comunes (como retardo, pérdida de paquetes y eco) junto con posibles soluciones.
+---
 
-### Pregunta 15: Control de Congestión en Redes Multimedia
+### Pregunta 17: DHCP
+**a)** ¿Qué es DHCP y cómo funciona?  
+- **DHCP (Dynamic Host Configuration Protocol)** asigna direcciones IP de forma automática a dispositivos en una red.  
+- Funcionamiento:  
+  1. Cliente envía **DHCPDISCOVER** (broadcast).  
+  2. Servidor responde con **DHCPOFFER** (IP propuesta).  
+  3. Cliente responde con **DHCPREQUEST** (aceptando oferta).  
+  4. Servidor confirma con **DHCPACK**.
 
-Describe dos técnicas utilizadas para evitar la congestión en aplicaciones multimedia (por ejemplo, el uso de buffering en el cliente o el marcado de paquetes – DiffServ) y explica cómo contribuyen a mejorar la calidad del servicio.
+**b)** ¿Qué ventajas aporta frente a configuración manual?  
+- Configuración rápida y automática.  
+- Evita conflictos de IP duplicadas.  
+- Facilita administración en redes grandes.
 
-### Pregunta 16: Best-Effort vs Servicios Multiclase
+---
 
-Compara el modelo Best-Effort con los Servicios Multiclase, enfatizando:
+### Pregunta 18: VPN
+**a)** ¿Qué es una VPN y para qué se usa?  
+- **VPN (Virtual Private Network)** crea un túnel cifrado entre el dispositivo y la red remota, protegiendo los datos que viajan por internet.  
+- Usos:  
+  - Acceso seguro a la red de una empresa.  
+  - Proteger privacidad al navegar.  
+  - Evadir restricciones geográficas.
 
-- La manera en que se maneja el tráfico
-- La garantía (o falta de ella) en la calidad de servicio
-- Ejemplos de aplicaciones en las que se utiliza cada enfoque
+**b)** Nombra un protocolo de VPN y su característica.  
+- **OpenVPN**: protocolo de código abierto, usa SSL/TLS para cifrado, muy flexible y compatible con firewalls.
 
-## Parte IV: Seguridad en Redes
+---
 
-### Pregunta 17: Problemas de Seguridad en Redes
+### Pregunta 19: DNS Cache Poisoning
+**a)** Explica qué es el DNS Cache Poisoning.  
+- Es un ataque que **inyecta registros DNS falsos** en la caché de un servidor DNS o cliente, redirigiendo solicitudes legítimas a sitios maliciosos.
 
-Identifica y explica brevemente las siguientes áreas críticas de seguridad en redes:
+**b)** ¿Cómo puede mitigarse?  
+- Usando **DNSSEC** (DNS Security Extensions) para firmar respuestas DNS.  
+- Configurar tiempos de expiración cortos en la caché.  
+- Actualizar software DNS con parches de seguridad.
 
-- Confidencialidad
-- Autenticación
-- No repudio
-- Integridad
+---
 
-Para cada una, menciona una solución o técnica que se emplea para mitigar el riesgo (por ejemplo, cifrado, autenticación multifactor, firmas digitales, etc.).
+### Pregunta 20: IPv4 vs IPv6
+**a)** Diferencias clave entre IPv4 e IPv6:
 
-### Pregunta 18: Cifrado Simétrico vs Asimétrico
+| Característica       | IPv4                         | IPv6                         |
+|---------------------|-----------------------------|-----------------------------|
+| Longitud dirección   | 32 bits                     | 128 bits                    |
+| Formato              | Decimal (ej: 192.168.1.1)   | Hexadecimal (ej: 2001:db8::1) |
+| Nº direcciones       | ~4.3 mil millones           | 3.4×10³⁸                   |
+| NAT necesario        | Sí                          | No (en teoría)              |
+| Configuración        | Manual/DHCP                 | Autoconfiguración (SLAAC)   |
 
-Realiza una comparación entre cifrado simétrico y asimétrico, abordando:
-
-- Número de claves requeridas
-- Velocidad y eficiencia
-- Ejemplos de algoritmos y aplicaciones típicas en cada caso
-
-### Pregunta 19: Funcionamiento del Algoritmo RSA
-
-**a)** Describe el proceso de generación de claves en RSA, incluyendo la selección de dos números primos, el cálculo de `n` y `ϕ(n)`, y la determinación de `e` y `d`.
-
-**b)** Realiza un ejemplo numérico sencillo (por ejemplo, usando `p=3`, `q=11`, `e=7`) para demostrar el cifrado y descifrado de un mensaje (puedes usar `M=4`).
-
-### Pregunta 20: Firewalls, VPN e IPSec
-
-**a)** Explica el funcionamiento de un firewall, mencionando al menos dos tipos (por ejemplo, filtrado de paquetes y firewall de estado) y su importancia en la protección de la red.
-
-**b)** Compara VPN e IPSec en términos de propósito, modo de operación y ejemplos de uso (por ejemplo, acceso remoto a recursos corporativos vs. cifrado entre routers).
-
-### Pregunta 21: SSL/TLS y DNS Spoofing
-
-**a)** Describe brevemente el funcionamiento del protocolo SSL/TLS y su importancia para la seguridad en la web (por ejemplo, en HTTPS).
-
-**b)** Explica qué es el DNS Spoofing y cómo la extensión DNSSEC contribuye a proteger la integridad de las respuestas DNS.
+**b)** Ventajas de IPv6:  
+- Espacio de direcciones **prácticamente ilimitado**.  
+- Mejora en **seguridad integrada** (IPSec).  
+- Eliminación de NAT, simplificando la comunicación extremo-a-extremo.
