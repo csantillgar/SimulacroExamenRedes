@@ -1,5 +1,5 @@
 # SimulacroExamenRedes
-
+https://github.com/csantillgar/SimulacroExamenRedes.git
 # Proyecto de Redes y Comunicaciones
 
 Este proyecto abarca preguntas clave sobre las capas de Red, Transporte, Aplicación y Seguridad en Redes. A continuación se detallan las preguntas a resolver.
@@ -8,7 +8,36 @@ Este proyecto abarca preguntas clave sobre las capas de Red, Transporte, Aplicac
 
 ### Pregunta 1: Cálculo de Ruta Más Corta
 
-**a)** Explica brevemente el funcionamiento del Algoritmo de Dijkstra para encontrar la ruta más corta entre dos nodos en un grafo ponderado.
+## Parte I: Capa de Red
+
+### Pregunta 1: Cálculo de Ruta Más Corta
+
+#### a) Explica brevemente el funcionamiento del Algoritmo de Dijkstra para encontrar la ruta más corta entre dos nodos en un grafo ponderado.
+
+El **Algoritmo de Dijkstra** es un método utilizado para encontrar la ruta más corta desde un nodo origen hacia todos los demás nodos de un grafo ponderado (es decir, donde las aristas tienen un peso o coste asociado). Su funcionamiento básico es el siguiente:
+
+1. **Inicialización**:  
+   - Se asigna una distancia de 0 al nodo origen y distancia infinita a todos los demás nodos.
+   - Se marca el nodo origen como **visitado** y los demás como **no visitados**.
+
+2. **Exploración de vecinos**:  
+   - Para el nodo actual, se evalúan todos sus vecinos no visitados.
+   - Se calcula la **distancia acumulada** desde el origen hasta cada vecino pasando por el nodo actual.
+   - Si la distancia calculada es menor que la distancia registrada previamente para ese vecino, se actualiza.
+
+3. **Selección del siguiente nodo**:  
+   - Se elige el nodo no visitado con la **menor distancia acumulada** y se repite el proceso desde ese nodo.
+
+4. **Finalización**:  
+   - El algoritmo termina cuando todos los nodos han sido visitados o cuando se alcanza el nodo de destino (en caso de que solo interese una ruta específica).
+
+Al final, se obtiene el camino más corto y su coste desde el nodo origen hasta cada nodo alcanzable en el grafo.
+
+**Características principales:**
+- Funciona solo con **pesos no negativos**.
+- Garantiza la ruta más corta.
+- Tiene una complejidad de `O(V^2)` o `O(E + V log V)` si se usa una cola de prioridad (heap).
+
 
 **b)** Describe el método de Enrutamiento por Inundación (Flooding) y discute sus ventajas y desventajas comparándolo con Dijkstra.
 
